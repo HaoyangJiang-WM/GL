@@ -1,0 +1,43 @@
+Device: cuda
+Model loaded. Epoch=449
+Total params: 35.0M
+Test indices: [25000, 25001, 25002, 25003, 25004]...25031
+i=0: KGML_mse=0.3785
+i=1: KGML_mse=0.6155
+i=2: KGML_mse=0.8018
+i=3: KGML_mse=1.1024
+i=4: KGML_mse=1.3509
+i=5: KGML_mse=0.7884
+i=6: KGML_mse=0.6804
+i=7: KGML_mse=0.1964
+i=8: KGML_mse=0.5765
+i=9: KGML_mse=0.5593
+i=10: KGML_mse=0.3949
+i=11: KGML_mse=0.4086
+i=12: KGML_mse=0.9803
+i=13: KGML_mse=0.5586
+i=14: KGML_mse=1.0214
+i=15: KGML_mse=1.1711
+i=16: KGML_mse=1.1724
+i=17: KGML_mse=1.1145
+i=18: KGML_mse=1.3135
+i=19: KGML_mse=0.6463
+i=20: KGML_mse=0.6673
+i=21: KGML_mse=0.8988
+i=22: KGML_mse=0.5455
+i=23: KGML_mse=0.6350
+i=24: KGML_mse=0.8348
+i=25: KGML_mse=1.2169
+i=26: KGML_mse=1.2217
+i=27: KGML_mse=0.9946
+i=28: KGML_mse=1.9599
+i=29: KGML_mse=1.1153
+i=30: KGML_mse=0.4645
+i=31: KGML_mse=0.3950
+
+=== SUMMARY ===
+Mean KGML MSE: 0.8369
+Std: 0.3708
+Min: 0.1964, Max: 1.9599
+Cases < 0.08: 0/32
+Saved results to /workspace/fmm_outputs/kgml_unet33m_cva_n32.json

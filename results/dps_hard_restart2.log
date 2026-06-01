@@ -1,0 +1,200 @@
+[Sun May 31 15:15:20 UTC 2026] DPS restart2: i=0 mcg + i=5,7,9 all methods
+[Sun May 31 17:48:08 UTC 2026] i=0 mcg done, starting i=5,7,9...
+ /workspace/fmm_outputs/ddpm_cva/latest.pt...
+  T=1000, step=100000, loss=0.00171
+Loading NO from /workspace/fmm_outputs/bench_cva_operator/unet/final.pt...
+
+============================================================
+Case i=0 | NO MSE=0.2771
+
+  --- mcg ---
+    run=0: MSE=0.0430
+    run=1: MSE=0.0439
+    run=2: MSE=0.0480
+    run=3: MSE=0.0415
+    run=4: MSE=0.0463
+    run=5: MSE=0.0445
+    run=6: MSE=0.0419
+    run=7: MSE=0.0445
+  mcg best=0.0415  ✓
+
+  === Summary i=0 ===
+    NO: 0.2771
+    mcg: 0.0415  ✓
+
+Saved results to /workspace/fmm_outputs/dps_hard
+
+=== Generating plots ===
+mkdir -p failed for path /.config/matplotlib: [Errno 13] Permission denied: '/.config'
+Matplotlib created a temporary cache directory at /tmp/matplotlib-gw92ug77 because there was an issue with the default path (/.config/matplotlib); it is highly recommended to set the MPLCONFIGDIR environment variable to a writable directory, in particular to speed up the import of Matplotlib and to better support multiprocessing.
+Saved plot: /workspace/fmm_outputs/dps_hard/plot_v2_vanilla_dps.png
+Saved plot: /workspace/fmm_outputs/dps_hard/plot_v3_improved_dps.png
+Saved plot: /workspace/fmm_outputs/dps_hard/plot_best_i00.png
+
+=== All done! ===
+
+Final summary:
+  i=0 | NO=0.2771
+    mcg: 0.0415  ✓
+[Sun May 31 17:48:08 UTC 2026] i=0 mcg done, starting i=5,7,9...
+Loading eval_ms...
+Device: cuda
+Loading data...
+Loading DDPM from /workspace/fmm_outputs/ddpm_cva/latest.pt...
+  T=1000, step=100000, loss=0.00171
+Loading NO from /workspace/fmm_outputs/bench_cva_operator/unet/final.pt...
+
+============================================================
+Case i=5 | NO MSE=0.2781
+
+  --- vanilla_z01 ---
+    run=0: MSE=0.5144
+    run=1: MSE=0.5592
+    run=2: MSE=0.6092
+    run=3: MSE=0.5849
+    run=4: MSE=0.4388
+    run=5: MSE=0.5529
+    run=6: MSE=0.5387
+    run=7: MSE=0.5501
+  vanilla_z01 best=0.4388  ✗
+
+  --- vanilla_z05 ---
+    run=0: MSE=0.4044
+    run=1: MSE=0.5813
+    run=2: MSE=0.4630
+    run=3: MSE=0.6163
+    run=4: MSE=0.5859
+    run=5: MSE=0.6035
+    run=6: MSE=0.3484
+    run=7: MSE=0.3870
+  vanilla_z05 best=0.3484  ✗
+
+  --- warmstart ---
+    run=0: MSE=0.2273
+    run=1: MSE=0.1861
+    run=2: MSE=0.1561
+    run=3: MSE=0.2062
+    run=4: MSE=0.1985
+    run=5: MSE=0.2225
+    run=6: MSE=0.1952
+    run=7: MSE=0.1766
+  warmstart best=0.1561  ✓
+
+  --- annealed ---
+    run=0: MSE=0.5295
+    run=1: MSE=0.5496
+    run=2: MSE=0.6187
+    run=3: MSE=0.5994
+    run=4: MSE=0.5874
+    run=5: MSE=0.5645
+    run=6: MSE=0.4901
+    run=7: MSE=0.5923
+  annealed best=0.4901  ✗
+
+  --- psd ---
+    run=0: MSE=0.4561
+    run=1: MSE=0.4477
+    run=2: MSE=0.6112
+    run=3: MSE=0.5375
+    run=4: MSE=0.3591
+    run=5: MSE=0.5593
+    run=6: MSE=0.4798
+    run=7: MSE=0.6136
+  psd best=0.3591  ✗
+
+  --- tmpd ---
+    run=0: MSE=0.4780
+    run=1: MSE=0.5960
+    run=2: MSE=0.6174
+    run=3: MSE=0.6082
+    run=4: MSE=0.3306
+    run=5: MSE=0.5902
+    run=6: MSE=0.4540
+    run=7: MSE=0.6317
+  tmpd best=0.3306  ✗
+
+  --- ps_plus ---
+    run=0: MSE=0.4911
+    run=1: MSE=0.5857
+    run=2: MSE=0.6247
+    run=3: MSE=0.6228
+    run=4: MSE=0.3330
+    run=5: MSE=0.5976
+    run=6: MSE=0.5614
+    run=7: MSE=0.6071
+  ps_plus best=0.3330  ✗
+
+  --- mcg ---
+    run=0: MSE=0.5906
+    run=1: MSE=0.6536
+    run=2: MSE=0.5569
+    run=3: MSE=0.6367
+    run=4: MSE=0.4266
+    run=5: MSE=0.6143
+    run=6: MSE=0.4872
+    run=7: MSE=0.5554
+  mcg best=0.4266  ✗
+
+  === Summary i=5 ===
+    NO: 0.2781
+    vanilla_z01: 0.4388  ✗
+    vanilla_z05: 0.3484  ✗
+    warmstart: 0.1561  ✓
+    annealed: 0.4901  ✗
+    psd: 0.3591  ✗
+    tmpd: 0.3306  ✗
+    ps_plus: 0.3330  ✗
+    mcg: 0.4266  ✗
+
+============================================================
+Case i=7 | NO MSE=0.3460
+
+  --- vanilla_z01 ---
+    run=0: MSE=0.0825
+    run=1: MSE=0.0865
+    run=2: MSE=0.0911
+    run=3: MSE=0.0878
+    run=4: MSE=0.1028
+    run=5: MSE=0.0942
+    run=6: MSE=0.1088
+    run=7: MSE=0.0968
+  vanilla_z01 best=0.0825  ✓
+
+  --- vanilla_z05 ---
+    run=0: MSE=0.0761
+    run=1: MSE=0.0921
+    run=2: MSE=0.0829
+    run=3: MSE=0.0655
+    run=4: MSE=0.0880
+    run=5: MSE=0.1025
+    run=6: MSE=0.0860
+    run=7: MSE=0.0899
+  vanilla_z05 best=0.0655  ✓
+
+  --- warmstart ---
+    run=0: MSE=0.2076
+    run=1: MSE=0.2206
+    run=2: MSE=0.2549
+    run=3: MSE=0.2577
+    run=4: MSE=0.2969
+    run=5: MSE=0.2484
+    run=6: MSE=0.2037
+    run=7: MSE=0.2844
+  warmstart best=0.2037  ✓
+
+  --- annealed ---
+    run=0: MSE=0.0891
+    run=1: MSE=0.0865
+    run=2: MSE=0.1028
+    run=3: MSE=0.0814
+    run=4: MSE=0.0840
+    run=5: MSE=0.0942
+    run=6: MSE=0.0967
+    run=7: MSE=0.0844
+  annealed best=0.0814  ✓
+
+  --- psd ---
+    run=0: MSE=0.0788
+    run=1: MSE=0.0952
+    run=2: MSE=0.0654
+    run=3: MSE=0.1373

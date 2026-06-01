@@ -1,0 +1,81 @@
+{
+  "main_method": "proposal_ms_lgfmi_grad",
+  "best_run": "v113_full32_tmid01_lw2_s3",
+  "main_v113": {
+    "n": 32,
+    "mean": 0.0787548029620666,
+    "median": 0.0690099261701107,
+    "std": 0.05775047276824078,
+    "min": 0.011774829588830471,
+    "max": 0.25541627407073975,
+    "count_under_0p08": 20
+  },
+  "neural_operator_baseline_from_eval_ms": {
+    "n": 32,
+    "mean": 0.11942598165478557,
+    "median": 0.08951045945286751,
+    "std": 0.08405643397050297,
+    "min": 0.019309375435113907,
+    "max": 0.3569040894508362,
+    "count_under_0p08": 14
+  },
+  "smoothed_no_baseline_from_eval_ms": {
+    "n": 32,
+    "mean": 0.10555012460099533,
+    "median": 0.0852314867079258,
+    "std": 0.07556226565667062,
+    "min": 0.01822572387754917,
+    "max": 0.329546183347702,
+    "count_under_0p08": 15
+  },
+  "kgml_unet35m_baseline": {
+    "n": 32,
+    "mean": 0.8369095758534968,
+    "median": 0.7950878441333771,
+    "std": 0.3708402583008583,
+    "min": 0.196401908993721,
+    "max": 1.9598959684371948,
+    "count_under_0p08": 0
+  },
+  "dps_hard_partial": {
+    "0": {
+      "no_mse": 0.2771,
+      "methods": {
+        "mcg": 0.0415
+      },
+      "best_method": "mcg",
+      "best_mse": 0.0415
+    },
+    "5": {
+      "no_mse": 0.2781,
+      "methods": {
+        "vanilla_z01": 0.4388,
+        "vanilla_z05": 0.3484,
+        "warmstart": 0.1561,
+        "annealed": 0.4901,
+        "psd": 0.3591,
+        "tmpd": 0.3306,
+        "ps_plus": 0.333,
+        "mcg": 0.4266
+      },
+      "best_method": "warmstart",
+      "best_mse": 0.1561
+    },
+    "7": {
+      "no_mse": 0.346,
+      "methods": {
+        "vanilla_z01": 0.0825,
+        "vanilla_z05": 0.0655,
+        "warmstart": 0.2037,
+        "annealed": 0.0814
+      },
+      "best_method": "vanilla_z05",
+      "best_mse": 0.0655
+    }
+  },
+  "notes": [
+    "All main-method rows are raw-noise proposals: --no_seeded_frac 0.0 and --bg_mode zero.",
+    "No learned inverse corrector is used; the learned model is only the unconditional FlowMap prior / NO baseline.",
+    "DPS hard-case log is partial for i=7 and later; treat it as diagnostic, not a full n=32 benchmark."
+  ]
+}
