@@ -1,0 +1,23 @@
+{
+  "case": "i=5 / global_idx=25005",
+  "main_best": {
+    "name": "lw4_tmid01_s20264500",
+    "mse": 0.05589718744158745
+  },
+  "no_mse_from_dps_log": 0.2781,
+  "dps_best_visible": {
+    "method": "warmstart",
+    "mse": 0.1561
+  },
+  "dps_methods_visible": {
+    "vanilla_z01": 0.4388,
+    "vanilla_z05": 0.3484,
+    "warmstart": 0.1561,
+    "annealed": 0.4901,
+    "psd": 0.3591,
+    "tmpd": 0.3306,
+    "ps_plus": 0.333,
+    "mcg": 0.4266
+  },
+  "notes": "Case-5 focused summary. Full n=32 logs are not emphasized in this case-only repo."
+}

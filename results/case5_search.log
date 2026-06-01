@@ -1,0 +1,102 @@
+Case g25005 exhaustive search — 20 configs
+
+tmid01_nophys_s20263000: MSE=0.2702  (433s)
+  stderr: ace/.conda/envs/flow/lib/python3.10/json/encoder.py", line 179, in default
+    raise TypeError(f'Object of type {o.__class__.__name__} '
+TypeError: Object of type TinyUNetVel is not JSON serializable
+
+tmid01_nophys_s20263100: MSE=0.2060  (430s)
+  stderr: ace/.conda/envs/flow/lib/python3.10/json/encoder.py", line 179, in default
+    raise TypeError(f'Object of type {o.__class__.__name__} '
+TypeError: Object of type TinyUNetVel is not JSON serializable
+
+tmid01_nophys_s20263200: MSE=0.0764  (453s)
+  stderr: ace/.conda/envs/flow/lib/python3.10/json/encoder.py", line 179, in default
+    raise TypeError(f'Object of type {o.__class__.__name__} '
+TypeError: Object of type TinyUNetVel is not JSON serializable
+
+tmid01_nophys_s20263300: MSE=0.0671  (445s)
+  stderr: ace/.conda/envs/flow/lib/python3.10/json/encoder.py", line 179, in default
+    raise TypeError(f'Object of type {o.__class__.__name__} '
+TypeError: Object of type TinyUNetVel is not JSON serializable
+
+tmid01_nophys_s20263400: MSE=0.1308  (453s)
+  stderr: ace/.conda/envs/flow/lib/python3.10/json/encoder.py", line 179, in default
+    raise TypeError(f'Object of type {o.__class__.__name__} '
+TypeError: Object of type TinyUNetVel is not JSON serializable
+
+tmid01_nophys_s20263500: MSE=0.0940  (452s)
+  stderr: ace/.conda/envs/flow/lib/python3.10/json/encoder.py", line 179, in default
+    raise TypeError(f'Object of type {o.__class__.__name__} '
+TypeError: Object of type TinyUNetVel is not JSON serializable
+
+tmid03_nophys_s20263600: MSE=0.1466  (451s)
+  stderr: ace/.conda/envs/flow/lib/python3.10/json/encoder.py", line 179, in default
+    raise TypeError(f'Object of type {o.__class__.__name__} '
+TypeError: Object of type TinyUNetVel is not JSON serializable
+
+tmid03_nophys_s20263700: MSE=0.0995  (432s)
+  stderr: ace/.conda/envs/flow/lib/python3.10/json/encoder.py", line 179, in default
+    raise TypeError(f'Object of type {o.__class__.__name__} '
+TypeError: Object of type TinyUNetVel is not JSON serializable
+
+tmid03_nophys_s20263800: MSE=0.0849  (480s)
+  stderr: ace/.conda/envs/flow/lib/python3.10/json/encoder.py", line 179, in default
+    raise TypeError(f'Object of type {o.__class__.__name__} '
+TypeError: Object of type TinyUNetVel is not JSON serializable
+
+tmid03_nophys_s20263900: MSE=0.1321  (445s)
+  stderr: ace/.conda/envs/flow/lib/python3.10/json/encoder.py", line 179, in default
+    raise TypeError(f'Object of type {o.__class__.__name__} '
+TypeError: Object of type TinyUNetVel is not JSON serializable
+
+global_tmid01_s20264000: MSE=0.0894  (446s)
+  stderr: ace/.conda/envs/flow/lib/python3.10/json/encoder.py", line 179, in default
+    raise TypeError(f'Object of type {o.__class__.__name__} '
+TypeError: Object of type TinyUNetVel is not JSON serializable
+
+global_tmid01_s20264100: MSE=0.0682  (444s)
+  stderr: ace/.conda/envs/flow/lib/python3.10/json/encoder.py", line 179, in default
+    raise TypeError(f'Object of type {o.__class__.__name__} '
+TypeError: Object of type TinyUNetVel is not JSON serializable
+
+global_tmid01_s20264200: MSE=0.1080  (450s)
+  stderr: ace/.conda/envs/flow/lib/python3.10/json/encoder.py", line 179, in default
+    raise TypeError(f'Object of type {o.__class__.__name__} '
+TypeError: Object of type TinyUNetVel is not JSON serializable
+
+global_tmid01_s20264300: MSE=0.0923  (446s)
+  stderr: ace/.conda/envs/flow/lib/python3.10/json/encoder.py", line 179, in default
+    raise TypeError(f'Object of type {o.__class__.__name__} '
+TypeError: Object of type TinyUNetVel is not JSON serializable
+
+lw4_tmid01_s20264400: MSE=0.0812  (455s)
+  stderr: ace/.conda/envs/flow/lib/python3.10/json/encoder.py", line 179, in default
+    raise TypeError(f'Object of type {o.__class__.__name__} '
+TypeError: Object of type TinyUNetVel is not JSON serializable
+
+lw4_tmid01_s20264500: MSE=0.0559  (453s)
+  stderr: ace/.conda/envs/flow/lib/python3.10/json/encoder.py", line 179, in default
+    raise TypeError(f'Object of type {o.__class__.__name__} '
+TypeError: Object of type TinyUNetVel is not JSON serializable
+
+fullwave_tmid01_s20264600: MSE=0.0907  (442s)
+  stderr: ace/.conda/envs/flow/lib/python3.10/json/encoder.py", line 179, in default
+    raise TypeError(f'Object of type {o.__class__.__name__} '
+TypeError: Object of type TinyUNetVel is not JSON serializable
+
+fullwave_tmid01_s20264700: MSE=0.1229  (447s)
+  stderr: ace/.conda/envs/flow/lib/python3.10/json/encoder.py", line 179, in default
+    raise TypeError(f'Object of type {o.__class__.__name__} '
+TypeError: Object of type TinyUNetVel is not JSON serializable
+
+ens4096_tmid01_s20264800: MSE=0.1250  (730s)
+  stderr: ace/.conda/envs/flow/lib/python3.10/json/encoder.py", line 179, in default
+    raise TypeError(f'Object of type {o.__class__.__name__} '
+TypeError: Object of type TinyUNetVel is not JSON serializable
+
+ens4096_tmid01_s20264900: MSE=0.1049  (724s)
+  stderr: ace/.conda/envs/flow/lib/python3.10/json/encoder.py", line 179, in default
+    raise TypeError(f'Object of type {o.__class__.__name__} '
+TypeError: Object of type TinyUNetVel is not JSON serializable
+

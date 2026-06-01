@@ -1,187 +1,214 @@
-# Raw-Noise FlowMap Inversion for FWI
+# Flow Map in Full Waveform Inversion
 
-This repository is a compact research snapshot for **raw-noise FlowMap inverse modeling** on CVA-style full waveform inversion cases.
+This repository is a compact case study for using an unconditional FlowMap prior in a full waveform inversion (FWI) inverse problem.
 
-The main result here is deliberately minimal:
-
-> sample a large bank of raw-noise FlowMap proposals, rank them with focused multiscale seismic misfit, then apply a small clean-space local linearized MAP / SGD correction.
-
-There is **no NO initialization** and **no learned inverse corrector** in the main method. The neural models used are only the unconditional FlowMap prior and baseline predictors.
-
-## Main Result
-
-Best complete run:
-
-`v113_full32_tmid01_lw2_s3`
-
-| Method | n | Mean MSE | Median MSE | Min | Max | Cases < 0.08 |
-|---|---:|---:|---:|---:|---:|---:|
-| Raw-noise FlowMap inverse, v113 | 32 | **0.0788** | 0.0690 | 0.0118 | 0.2554 | 20 |
-| Neural Operator baseline, `NO` | 32 | 0.1194 | 0.0895 | 0.0193 | 0.3569 | 14 |
-| Smoothed NO baseline | 32 | 0.1056 | 0.0852 | 0.0182 | 0.3295 | 15 |
-| KGML UNet 35M baseline | 32 | 0.8369 | 0.7951 | 0.1964 | 1.9599 | 0 |
-
-![Results summary](figures/results_summary.png)
-
-![v113 MSE histogram](figures/v113_mse_histogram.png)
-
-## Qualitative Hard-Case Figures
-
-Hard case `i=5 / global_idx=25005` was used as a diagnostic case because it exposes a failure mode of both pure ranking and many DPS variants: the seismic misfit can be low while the geological layer correspondence is still wrong.
-
-Original comparison:
-
-![Case 5 comparison](figures/case5_best_compare.png)
-
-Improved case-5 search figure:
-
-![Case 5 comparison v2](figures/case5_best_compare_v2.png)
-
-Four hard cases:
-
-![Hard four-row comparison](figures/hard4row_compare_white.png)
-
-## Algorithm
-
-The main run uses `proposal_ms_lgfmi_grad`:
-
-1. Draw raw-noise seeds.
-2. Push each seed through the unconditional FlowMap prior.
-3. Score proposals by focused multiscale seismic consistency.
-4. Keep a proposal bank rather than committing to a single sample too early.
-5. Apply clean-space local linearized MAP-style correction with a small SGD update.
-6. Select by focused multiscale score.
-
-Important settings from `v113`:
+The repository now focuses on one hard diagnostic example:
 
 ```text
---no_seeded_frac 0.0
---bg_mode zero
---method proposal_ms_lgfmi_grad
---ensemble 2048
---proposal_ms_scales 16,8,4,2,1
---proposal_ms_topk_start 512
---proposal_ms_union_k 512
---proposal_ms_union_views 16,8,4,2
---lgfmi_k 32
---lgfmi_t_mid 0.1
---late_weight 2.0
---lgfmi_grad_steps 8
---lgfmi_grad_lr 0.03
---lgfmi_grad_trust 0.05
---lgfmi_grad_sgd
+case i = 5
+global index = 25005
 ```
 
-The reproduction launcher is in [`scripts/run_v113.sh`](scripts/run_v113.sh).
+This case is useful because it separates visual/geological correctness from low seismic misfit: several inverse solvers can reduce waveform loss while still selecting a poor velocity basin.
 
-## Baselines
+## Main Idea
 
-### DPS / DDPM inverse baseline
-
-Code:
-
-- [`src/dps_v3.py`](src/dps_v3.py)
-- [`scripts/run_dps_hard.sh`](scripts/run_dps_hard.sh)
-
-Current hard-case status is partial. Completed / visible rows from `dps_hard_restart2.log`:
-
-| Case | NO MSE | Best DPS method | Best DPS MSE | Note |
-|---:|---:|---|---:|---|
-| 0 | 0.2771 | MCG | 0.0415 | strong on this case |
-| 5 | 0.2781 | warmstart | 0.1561 | much worse than case-5 FlowMap search |
-| 7 | 0.3460 | vanilla_z05 | 0.0655 | partial log; later methods were still running/truncated |
-
-Interpretation: DPS can solve some cases, but on these hard cases it is slow and unstable. Case 5 is the clearest miss: the best visible DPS result is `0.1561`, while the focused FlowMap search reached about `0.0559`.
-
-### Neural Operator baseline, `NO`
-
-This is the baseline reported in the `eval_ms` rows as `no_mse`. It is a **separate baseline from the KGML UNet 35M** below.
-
-In the current workspace the checkpoint path is:
+The method is intentionally simple:
 
 ```text
-/workspace/fmm_outputs/bench_cva_operator/unet/final.pt
+raw-noise FlowMap proposal bank
++ focused / multiscale seismic ranking
++ clean-space local linearized MAP / SGD correction
 ```
 
-The directory name is confusing, but in the logs and result rows this is the `NO` / neural-operator-style baseline. It is used only for comparison and is **not** used to initialize the main raw-noise FlowMap method. In `v113`, raw-noise FlowMap improves over this baseline:
+There is:
+
+- no Neural Operator initialization,
+- no learned inverse corrector,
+- no posterior network trained on `y`.
+
+The learned FlowMap is used only as an unconditional prior. The measurement enters only through the FWI forward model / seismic scoring and local correction.
+
+## Case-5 Result
+
+Best case-5 run:
 
 ```text
-NO mean MSE:      0.1194
-FlowMap v113:     0.0788
+lw4_tmid01_s20264500
+MSE = 0.0559
 ```
 
-### KGML UNet 35M baseline
+Visible baselines on the same case:
 
-This is a different baseline from `NO`. The larger KGML UNet baseline **did run**:
+| Method | Case-5 MSE | Notes |
+|---|---:|---|
+| NO baseline | 0.2781 | Neural Operator style baseline output |
+| DPS / DDPM best visible | 0.1561 | best visible method: warmstart |
+| FlowMap inverse, case-5 search | **0.0559** | raw-noise proposal bank + local correction |
+
+![Case-5 MSE bar chart](figures/case5_mse_bar.png)
+
+Main visual comparison:
+
+![Case-5 comparison](figures/case5_best_compare_v2.png)
+
+Original comparison figure:
+
+![Case-5 original comparison](figures/case5_best_compare.png)
+
+## What Is Compared?
+
+### FlowMap inverse
+
+The case-5 search used variants of:
+
+- focused or global seismic scoring,
+- different `t_mid` values,
+- different `late_weight` values,
+- raw-noise proposal banks.
+
+The best case-5 setting was:
 
 ```text
-kgml_unet33m_cva_n32.json
-kgml_unet33m_n32.log
+late_weight = 4.0
+t_mid       = 0.1
+seed        = 20264500
 ```
 
-Result:
+The full evaluation script copied from the pod is:
 
 ```text
-n=32
-mean MSE = 0.8369
-min MSE  = 0.1964
-cases < 0.08 = 0/32
+src/eval_ms_v113.py
 ```
 
-This is not competitive on this test split. It is included to document that the failure is not simply “train a bigger UNet.”
+The exact full-32 stable run was not kept as the main README result, because this repository is now case-5 only. The full-run code is still useful as the implementation source for the FlowMap inverse machinery.
+
+### DPS / DDPM
+
+The DPS/DDPM diagnostic baseline is:
+
+```text
+src/dps_v3.py
+scripts/run_dps_hard.sh
+```
+
+For case 5, the visible methods in `dps_hard_restart2.log` gave:
+
+| DPS variant | Case-5 MSE |
+|---|---:|
+| vanilla_z01 | 0.4388 |
+| vanilla_z05 | 0.3484 |
+| warmstart | **0.1561** |
+| annealed | 0.4901 |
+| PSD | 0.3591 |
+| TMPD | 0.3306 |
+| PS+ | 0.3330 |
+| MCG | 0.4266 |
+
+### NO and UNet are separate baselines
+
+`NO` and `UNet` are not the same baseline.
+
+The `NO` result here is the Neural Operator style baseline used inside the FWI evaluation logs as `no_mse`. It is a baseline prediction and is **not** used to initialize the FlowMap inverse method.
+
+The UNet / PINN-UNet baselines are separate supervised amortized inverse maps. Their training entry point is:
+
+```text
+src/run_operator_fwi.py
+```
+
+Variants:
+
+```text
+--variant unet
+--variant pinn_unet
+--variant fno
+```
+
+The current retraining jobs were launched separately after this snapshot:
+
+```text
+unet      -> /workspace/fmm_outputs/operator_retrain_cva_0601/unet
+pinn_unet -> /workspace/fmm_outputs/operator_retrain_cva_0601/pinn_unet
+```
+
+These are not yet folded into the case-5 README result.
+
+## Data Generation Code
+
+FWI data generation / forward modeling code is included under `src/`:
+
+```text
+src/data_gen_f_cva.py       # CVA FWM/data-generation operator copied from the pod
+src/gen_fwi_obs.py          # local observation generation helper
+src/gen_fwi_obs_multi.py    # multi-case observation generation helper
+```
+
+The cache format expected by the experiments is:
+
+```text
+vel_*.pt
+seis_*.pt
+```
 
 ## Repository Contents
 
 ```text
-src/
-  eval_ms_v113.py              # exact eval script copied from the pod used for v113
-  dps_v3.py                    # DPS/DDPM diagnostic baseline
-  run_operator_fwi.py          # neural-operator baseline entry point
-  run_ddim_dps_fwi.py          # older DPS runner
-  run_ddpm_baselines_fwi.py    # older DDPM baseline runner
-
-scripts/
-  run_v113.sh                  # reproduction command for the best complete run
-  run_dps_hard.sh              # hard-case DPS baseline launcher
-  summarize_results.py         # parses logs and regenerates summary figures
-
-results/
-  prop_ms_lgfmi_sgd_v113_full32_tmid01_lw2_s3.log
-  summary_curated.json
-  dps_hard_restart2.log
-  dps_hard_summary.json
-  kgml_unet33m_cva_n32.json
-  kgml_unet33m_n32.log
-
 figures/
-  results_summary.png
-  v113_mse_histogram.png
   case5_best_compare.png
   case5_best_compare_v2.png
-  hard4row_compare_white.png
+  case5_mse_bar.png
+
+results/
+  case5_curated_results.json
+  case5_search_summary.json
+  case5_search.log
+  dps_hard_restart2.log
+
+src/
+  eval_ms_v113.py
+  dps_v3.py
+  run_operator_fwi.py
+  run_ddim_dps_fwi.py
+  run_ddpm_baselines_fwi.py
+  data_gen_f_cva.py
+  gen_fwi_obs.py
+  gen_fwi_obs_multi.py
+
+scripts/
+  run_v113.sh
+  run_dps_hard.sh
 ```
 
-## Regenerate Figures
+## Reproduce the Case-5 Summary Figure
 
 ```bash
 pip install -r requirements.txt
-python scripts/summarize_results.py
+python - <<'PY'
+import json, pathlib
+import matplotlib.pyplot as plt
+
+root = pathlib.Path('.')
+res = json.loads((root / 'results/case5_curated_results.json').read_text())
+labels = ['NO', 'DPS warmstart', 'FlowMap']
+vals = [res['no_mse_from_dps_log'], res['dps_best_visible']['mse'], res['main_best']['mse']]
+plt.bar(labels, vals)
+plt.ylabel('relative MSE')
+plt.title('Hard case i=5 / g=25005')
+plt.tight_layout()
+plt.savefig('figures/case5_mse_bar.png', dpi=180)
+PY
 ```
 
-This refreshes:
+## References
 
-- `results/summary_curated.json`
-- `figures/results_summary.png`
-- `figures/v113_mse_histogram.png`
+- Boffi, N. M., et al. *Flow Map Matching*. arXiv, 2024.
+- Chung, H., Sim, B., Ryu, D., and Ye, J. C. *Improving Diffusion Models for Inverse Problems using Manifold Constraints*. NeurIPS, 2022.
+- Song, Y., Sohl-Dickstein, J., Kingma, D. P., Kumar, A., Ermon, S., and Poole, B. *Score-Based Generative Modeling through Stochastic Differential Equations*. ICLR, 2021.
+- Li, Z., Kovachki, N., Azizzadenesheli, K., et al. *Fourier Neural Operator for Parametric Partial Differential Equations*. ICLR, 2021.
+- Virieux, J. and Operto, S. *An overview of full-waveform inversion in exploration geophysics*. Geophysics, 2009.
+- NVIDIA Modulus / PhysicsNeMo documentation and examples for neural-operator and physics-informed operator learning baselines.
 
-## Takeaway
+## Short Takeaway
 
-The strongest simple version so far is **not** a learned inverse corrector and not NO initialization. It is:
-
-```text
-raw-noise FlowMap proposal bank
-+ focused/multiscale ranking
-+ clean-space local linearized MAP / SGD correction
-```
-
-The current best complete setting is `t_mid=0.1, late_weight=2.0`. Larger late weights (`4` or `6`) often improve some cases but create worse outliers; `late_weight=2` is currently the most stable full-32 setting.
+For this hard FWI case, deterministic or diffusion inverse solvers can be unstable because the seismic objective is multimodal. A raw-noise FlowMap proposal bank preserves multiple geological candidates long enough for focused multiscale scoring and local MAP correction to select a better basin.
