@@ -31,10 +31,11 @@ The learned FlowMap is used only as an unconditional prior. The measurement ente
 
 ## Case-5 Result
 
-Best case-5 run:
+Best case-5 FlowMap inverse setting:
 
 ```text
-lw4_tmid01_s20264500
+late_weight = 4.0
+t_mid       = 0.1
 MSE = 0.0559
 ```
 
@@ -44,11 +45,17 @@ Visible baselines on the same case:
 |---|---:|---|
 | NO baseline | 0.2781 | Neural Operator style baseline output |
 | DPS / DDPM best visible | 0.1561 | best visible method: warmstart |
-| FlowMap inverse, case-5 search | **0.0559** | raw-noise proposal bank + local correction |
+| UNet retrain | 0.0558 | supervised amortized inverse map, not used by FlowMap |
+| PINN-UNet retrain | **0.0352** | supervised inverse map with physics loss, not used by FlowMap |
+| FlowMap inverse, case-5 search | 0.0559 | raw-noise proposal bank + local correction |
 
 ![Case-5 MSE bar chart](figures/case5_mse_bar.png)
 
-Main visual comparison:
+Main visual comparison with operator baselines:
+
+![Case-5 with operator baselines](figures/case5_with_operator_baselines.png)
+
+FlowMap / DPS / NO visual comparison:
 
 ![Case-5 comparison](figures/case5_best_compare_v2.png)
 
@@ -72,13 +79,12 @@ The best case-5 setting was:
 ```text
 late_weight = 4.0
 t_mid       = 0.1
-seed        = 20264500
 ```
 
-The full evaluation script copied from the pod is:
+The FlowMap inverse implementation is:
 
 ```text
-src/eval_ms_v113.py
+src/flowmap_inverse_case5.py
 ```
 
 The exact full-32 stable run was not kept as the main README result, because this repository is now case-5 only. The full-run code is still useful as the implementation source for the FlowMap inverse machinery.
@@ -125,14 +131,14 @@ Variants:
 --variant fno
 ```
 
-The current retraining jobs were launched separately after this snapshot:
+The operator retraining jobs on the same CVA cache gave the following case-5 predictions:
 
 ```text
-unet      -> /workspace/fmm_outputs/operator_retrain_cva_0601/unet
-pinn_unet -> /workspace/fmm_outputs/operator_retrain_cva_0601/pinn_unet
+UNet      normalized MSE = 0.0558
+PINN-UNet normalized MSE = 0.0352
 ```
 
-These are not yet folded into the case-5 README result.
+These supervised baselines are shown in `figures/case5_with_operator_baselines.png`. They are separate baselines and are not used as initialization or correction networks for the FlowMap inverse method.
 
 ## Data Generation Code
 
@@ -157,16 +163,18 @@ seis_*.pt
 figures/
   case5_best_compare.png
   case5_best_compare_v2.png
+  case5_with_operator_baselines.png
   case5_mse_bar.png
 
 results/
   case5_curated_results.json
+  case5_operator_metrics.json
   case5_search_summary.json
   case5_search.log
   dps_hard_restart2.log
 
 src/
-  eval_ms_v113.py
+  flowmap_inverse_case5.py
   dps_v3.py
   run_operator_fwi.py
   run_ddim_dps_fwi.py
@@ -176,7 +184,7 @@ src/
   gen_fwi_obs_multi.py
 
 scripts/
-  run_v113.sh
+  run_flowmap_case5.sh
   run_dps_hard.sh
 ```
 

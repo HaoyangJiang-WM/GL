@@ -1,9 +1,11 @@
 {
   "case": "i=5 / global_idx=25005",
   "main_best": {
-    "name": "lw4_tmid01_s20264500",
+    "name": "FlowMap inverse, late_weight=4.0, t_mid=0.1",
     "mse": 0.05589718744158745
   },
+  "unet_retrain_mse": 0.0557873398065567,
+  "pinn_unet_retrain_mse": 0.03518037125468254,
   "no_mse_from_dps_log": 0.2781,
   "dps_best_visible": {
     "method": "warmstart",

@@ -1,18 +1,17 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# Reproduction launcher for the best complete raw-noise FlowMap inverse run.
-# This is the exact hyperparameter pattern used by:
-#   prop_ms_lgfmi_sgd_v113_full32_tmid01_lw2_s3.log
+# Reproduction launcher for the raw-noise FlowMap inverse setting used in
+# the case-5 study. Paths may need adjustment for a different cluster layout.
 
-python /tmp/eval_ms.py \
+python src/flowmap_inverse_case5.py \
   --setting loc \
   --flow_ckpt /workspace/fmm_outputs/otfm_prior_cva30k_greedy_sig00/final.pt \
   --no_ckpt /workspace/fmm_outputs/bench_cva_operator/unet/final.pt \
   --cache_dir /data10/fwi_cache/cva \
   --data_root /workspace/fdo-fwi/data/cva \
   --n_test 32 \
-  --seed 20264100 \
+  --seed 42 \
   --only_auto \
   --bg_mode zero \
   --no_seeded_frac 0.0 \
