@@ -77,13 +77,9 @@ This is lower than the supervised UNet and PINN-UNet baselines on the same case.
 
 ![Case-5 C2F-SVGD-FM comparison](figures/case5_c2f_svgd_best_033861_compare.png)
 
-Historical operator comparison:
+Observed seismic data for this case:
 
-![Case-5 with operator baselines](figures/case5_with_operator_baselines.png)
-
-FlowMap / DPS / NO diagnostic comparison:
-
-![Case-5 comparison](figures/case5_best_compare_v2.png)
+![Case-5 observed seismic data](figures/case5_observed_y.png)
 
 ## C2F-SVGD-FM Details
 
@@ -212,14 +208,13 @@ seis_*.pt
 ```text
 figures/
   case5_c2f_svgd_best_033861_compare.png
-  case5_best_compare_v2.png
-  case5_with_operator_baselines.png
-  case5_mse_bar.png
+  case5_observed_y.png
 
 results/
   case5_curated_results.json
   case5_operator_metrics.json
   case5_search_summary.json
+  case5_observed_y.npy
   case5_search.log
   dps_hard_restart2.log
 
@@ -239,31 +234,30 @@ scripts/
   run_dps_hard.sh
 ```
 
-## Reproduce the Case-5 Summary Figure
+## Reproduce the Observed-Seismic Figure
 
 ```bash
 pip install -r requirements.txt
 python - <<'PY'
-import json, pathlib
+import pathlib
+import numpy as np
 import matplotlib.pyplot as plt
 
 root = pathlib.Path('.')
-res = json.loads((root / 'results/case5_curated_results.json').read_text())
-labels = ['NO', 'DPS', 'UNet', 'PINN-UNet', 'C2F-SVGD-FM']
-vals = [
-    res['no_mse_from_dps_log'],
-    res['dps_best_visible']['mse'],
-    res['unet_retrain_mse'],
-    res['pinn_unet_retrain_mse'],
-    res['main_best']['mse'],
-]
-plt.figure(figsize=(7, 3.5))
-plt.bar(labels, vals)
-plt.ylabel('normalized MSE')
-plt.title('Hard case i=5 / g=25005')
-plt.xticks(rotation=20, ha='right')
-plt.tight_layout()
-plt.savefig('figures/case5_mse_bar.png', dpi=180)
+y = np.load(root / 'results/case5_observed_y.npy')
+lim = np.percentile(np.abs(y), 99.5)
+fig, axes = plt.subplots(1, y.shape[0], figsize=(13, 3.0), constrained_layout=True)
+for i, ax in enumerate(axes):
+    im = ax.imshow(y[i], cmap='seismic', vmin=-lim, vmax=lim, aspect='auto', origin='upper')
+    ax.set_title(f'source {i + 1}', fontsize=9)
+    ax.set_xlabel('receiver')
+    if i == 0:
+        ax.set_ylabel('time step')
+    else:
+        ax.set_yticks([])
+fig.suptitle('Case 5 observed seismic data y', fontsize=12)
+fig.colorbar(im, ax=axes, shrink=0.82, pad=0.01, label='normalized amplitude')
+fig.savefig(root / 'figures/case5_observed_y.png', dpi=200)
 PY
 ```
 
