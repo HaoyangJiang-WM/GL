@@ -212,7 +212,6 @@ seis_*.pt
 ```text
 figures/
   case5_c2f_svgd_best_033861_compare.png
-  case5_best_compare.png
   case5_best_compare_v2.png
   case5_with_operator_baselines.png
   case5_mse_bar.png
