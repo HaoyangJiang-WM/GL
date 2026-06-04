@@ -1,18 +1,18 @@
 {
   "case_index": 25005,
   "normalized_mse": {
-    "flowmap": 0.05589718744158745,
+    "c2f_svgd_fm": 0.0338617,
     "unet": 0.0557873398065567,
     "pinn_unet": 0.03518037125468254,
     "no": 0.2781,
     "dps_warmstart": 0.1561
   },
-  "physical_relative_mse_used_in_figure": {
-    "flowmap": 0.015322120855737973,
-    "unet": 0.015292007497709332,
-    "pinn_unet": 0.009643381508208697,
-    "no": 0.07623951108310155,
-    "dps_warmstart": 0.04279873882641085
+  "baseline_notes": {
+    "c2f_svgd_fm": "pure raw-noise FlowMap proposal bank with trajectory-compatible multi-time SVGD assimilation",
+    "unet": "supervised amortized inverse map; not used by C2F-SVGD-FM",
+    "pinn_unet": "supervised amortized inverse map with physics loss; not used by C2F-SVGD-FM",
+    "no": "Neural Operator style baseline prediction; not used for initialization",
+    "dps_warmstart": "best visible DPS/DDPM diagnostic baseline in the included log"
   },
-  "figure": "/workspace/fmm_outputs/hard_case_preds/case5_with_operator_baselines.png"
+  "figure": "figures/case5_c2f_svgd_best_033861_compare.png"
 }

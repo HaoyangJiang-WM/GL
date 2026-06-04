@@ -1,8 +1,14 @@
 {
   "case": "i=5 / global_idx=25005",
   "main_best": {
-    "name": "FlowMap inverse, late_weight=4.0, t_mid=0.1",
-    "mse": 0.05589718744158745
+    "name": "C2F-SVGD-FM",
+    "full_name": "Coarse-to-Fine SVGD FlowMap Assimilation",
+    "mse": 0.0338617,
+    "initialization": "pure raw noise",
+    "uses_no_initialization": true,
+    "uses_unet_initialization": false,
+    "uses_learned_corrector": false,
+    "selection": "blind seismic score only"
   },
   "unet_retrain_mse": 0.0557873398065567,
   "pinn_unet_retrain_mse": 0.03518037125468254,
@@ -21,5 +27,10 @@
     "ps_plus": 0.333,
     "mcg": 0.4266
   },
-  "notes": "Case-5 focused summary. Full n=32 logs are not emphasized in this case-only repo."
+  "main_method_components": [
+    "raw-noise proposal bank plus multiscale blind rank",
+    "trajectory-compatible multi-time z_t FlowMap assimilation",
+    "SVGD/Adam particle update with tether, trust region, gate, and final blind select"
+  ],
+  "notes": "Case-5 focused summary. C2F-SVGD-FM uses pure raw-noise FlowMap proposals and no NO/UNet initialization."
 }

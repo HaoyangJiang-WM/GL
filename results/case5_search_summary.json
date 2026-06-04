@@ -1,126 +1,32 @@
 {
-  "best_mse": 0.05589718744158745,
-  "results": [
-    {
-      "mse": 0.27018818259239197,
-      "elapsed": 432.70471954345703,
-      "trial_id": "trial_01",
-      "setting": "focused score, t_mid=0.1, no physics rerank"
-    },
-    {
-      "mse": 0.2059994786977768,
-      "elapsed": 429.9422821998596,
-      "trial_id": "trial_02",
-      "setting": "focused score, t_mid=0.1, no physics rerank"
-    },
-    {
-      "mse": 0.0763511210680008,
-      "elapsed": 453.2804594039917,
-      "trial_id": "trial_03",
-      "setting": "focused score, t_mid=0.1, no physics rerank"
-    },
-    {
-      "mse": 0.06707791984081268,
-      "elapsed": 445.17447996139526,
-      "trial_id": "trial_04",
-      "setting": "focused score, t_mid=0.1, no physics rerank"
-    },
-    {
-      "mse": 0.13075095415115356,
-      "elapsed": 453.01314783096313,
-      "trial_id": "trial_05",
-      "setting": "focused score, t_mid=0.1, no physics rerank"
-    },
-    {
-      "mse": 0.0940493792295456,
-      "elapsed": 451.90124106407166,
-      "trial_id": "trial_06",
-      "setting": "focused score, t_mid=0.1, no physics rerank"
-    },
-    {
-      "mse": 0.14662030339241028,
-      "elapsed": 450.65326857566833,
-      "trial_id": "trial_07",
-      "setting": "focused score, t_mid=0.3, no physics rerank"
-    },
-    {
-      "mse": 0.09950719773769379,
-      "elapsed": 431.87880301475525,
-      "trial_id": "trial_08",
-      "setting": "focused score, t_mid=0.3, no physics rerank"
-    },
-    {
-      "mse": 0.0849275067448616,
-      "elapsed": 480.306218624115,
-      "trial_id": "trial_09",
-      "setting": "focused score, t_mid=0.3, no physics rerank"
-    },
-    {
-      "mse": 0.1321103274822235,
-      "elapsed": 445.1174347400665,
-      "trial_id": "trial_10",
-      "setting": "focused score, t_mid=0.3, no physics rerank"
-    },
-    {
-      "mse": 0.0893915519118309,
-      "elapsed": 446.1480932235718,
-      "trial_id": "trial_11",
-      "setting": "global score, t_mid=0.1"
-    },
-    {
-      "mse": 0.06824006140232086,
-      "elapsed": 443.5305805206299,
-      "trial_id": "trial_12",
-      "setting": "global score, t_mid=0.1"
-    },
-    {
-      "mse": 0.10797727108001709,
-      "elapsed": 450.1020317077637,
-      "trial_id": "trial_13",
-      "setting": "global score, t_mid=0.1"
-    },
-    {
-      "mse": 0.09228573739528656,
-      "elapsed": 445.78457474708557,
-      "trial_id": "trial_14",
-      "setting": "global score, t_mid=0.1"
-    },
-    {
-      "mse": 0.08116990327835083,
-      "elapsed": 454.6999189853668,
-      "trial_id": "trial_15",
-      "setting": "focused score, late_weight=4.0, t_mid=0.1"
-    },
-    {
-      "mse": 0.05589718744158745,
-      "elapsed": 452.6622631549835,
-      "trial_id": "trial_16",
-      "setting": "focused score, late_weight=4.0, t_mid=0.1"
-    },
-    {
-      "mse": 0.0906594917178154,
-      "elapsed": 441.9082374572754,
-      "trial_id": "trial_17",
-      "setting": "full-wave score, t_mid=0.1"
-    },
-    {
-      "mse": 0.12289047241210938,
-      "elapsed": 447.3854465484619,
-      "trial_id": "trial_18",
-      "setting": "full-wave score, t_mid=0.1"
-    },
-    {
-      "mse": 0.12503275275230408,
-      "elapsed": 730.3533525466919,
-      "trial_id": "trial_19",
-      "setting": "larger proposal bank, t_mid=0.1"
-    },
-    {
-      "mse": 0.10491909831762314,
-      "elapsed": 724.3643481731415,
-      "trial_id": "trial_20",
-      "setting": "larger proposal bank, t_mid=0.1"
-    }
-  ],
-  "best_trial_id": "trial_16"
+  "case": "i=5 / global_idx=25005",
+  "best_mse": 0.0338617,
+  "best_method": "C2F-SVGD-FM",
+  "best_setting": {
+    "method": "proposal_ms_svgd",
+    "initialization": "pure raw noise",
+    "ensemble": 512,
+    "proposal_multiscale": "24,16,12,8,4,2,1",
+    "proposal_union_k": 256,
+    "particles": 16,
+    "times": "0.85,0.70,0.55,0.40,0.25,0.12",
+    "scales": "8,6,4,3,2,1",
+    "steps": "6,10,5,4,4,4",
+    "learning_rates": "0.040,0.036,0.022,0.018,0.012,0.007",
+    "prior_tether": "0.05,0.08,0.15,0.22,0.38,0.58",
+    "trust_region": "0.045,0.040,0.026,0.020,0.015,0.010",
+    "gate_scales": "16,8,4,2,1",
+    "psd_mix": 0.35
+  },
+  "baselines": {
+    "no": 0.2781,
+    "dps_warmstart": 0.1561,
+    "unet": 0.0557873398065567,
+    "pinn_unet": 0.03518037125468254
+  },
+  "interpretation": [
+    "UNet and PINN-UNet are supervised amortized inverse maps; they are strong baselines but can smooth multimodal or discontinuous structures.",
+    "DPS/DDPM has a generative prior but repeated long-chain guidance through denoised clean estimates can be unstable for nonconvex FWI.",
+    "C2F-SVGD-FM uses pure raw-noise FlowMap proposals, multiscale blind ranking, multi-time z_t assimilation, and gated SVGD/Adam updates."
+  ]
 }
