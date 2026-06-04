@@ -75,7 +75,13 @@ This is lower than the supervised UNet and PINN-UNet baselines on the same case.
 | PINN-UNet retrain | 0.0352 | supervised inverse map with physics loss, not used by C2F-SVGD-FM |
 | C2F-SVGD-FM | **0.0339** | pure-noise FlowMap proposal bank + multi-time SVGD assimilation |
 
-![Case-5 C2F-SVGD-FM comparison](figures/case5_c2f_svgd_best_033861_compare.png)
+All velocity-model comparisons:
+
+![Case-5 all comparisons](figures/case5_all_comparisons.png)
+
+C2F-SVGD-FM error map:
+
+![Case-5 C2F-SVGD-FM error](figures/case5_c2f_svgd_error.png)
 
 Observed seismic data for this case:
 
@@ -207,7 +213,8 @@ seis_*.pt
 
 ```text
 figures/
-  case5_c2f_svgd_best_033861_compare.png
+  case5_all_comparisons.png
+  case5_c2f_svgd_error.png
   case5_observed_y.png
 
 results/
