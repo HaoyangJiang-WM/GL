@@ -25,6 +25,14 @@ raw-noise proposal bank
 -> final blind select
 ```
 
+The strongest variant in this repository adds a small **bidirectional re-noising extension** after the single-pass C2F trajectory:
+
+```text
+blind-select clean FlowMap elites
+-> re-noise them back to an informative FlowMap time
+-> resume gated C2F-SVGD-FM assimilation
+```
+
 The learned FlowMap is used as an unconditional prior. The measurement enters only through FWI forward modeling, multiscale seismic scoring, and particle updates. The method does not use Neural Operator or UNet initialization, and it does not train a learned inverse corrector on the observed data.
 
 ## Motivation
@@ -38,13 +46,15 @@ C2F-SVGD-FM keeps the generative-prior advantage while making the inverse update
 1. **Proposal diversity:** start from a raw-noise FlowMap proposal bank and keep multiple basin candidates.
 2. **Coarse-to-fine seismic ranking:** use multiscale observation consistency, not ground-truth velocity, to choose useful particles.
 3. **Particle transport in FlowMap time:** move the same particles along the FlowMap trajectory and update them with differentiable FWI gradients, SVGD diversity, and conservative accept/reject gates.
+4. **Bidirectional basin escape:** optionally select promising clean candidates, re-noise them back to a useful FlowMap time, and rerun the gated trajectory update to escape a poor local basin.
 
 ## Case-5 Result
 
-Best case-5 C2F-SVGD-FM result:
+Best case-5 C2F-SVGD-FM results:
 
 ```text
-normalized MSE = 0.033861700
+single-pass normalized MSE = 0.033861700
+bidirectional extension normalized MSE = 0.026665602
 initialization = pure raw noise
 selection = blind seismic score only
 ```
@@ -57,7 +67,8 @@ This is lower than the supervised UNet and PINN-UNet baselines on the same case.
 | DPS / DDPM best visible | 0.1561 | best visible DPS diagnostic baseline |
 | UNet retrain | 0.0558 | supervised amortized inverse map |
 | PINN-UNet retrain | 0.0352 | supervised inverse map with physics loss |
-| C2F-SVGD-FM | **0.0339** | pure-noise FlowMap proposal bank + multi-time SVGD assimilation |
+| C2F-SVGD-FM | 0.0339 | pure-noise FlowMap proposal bank + single-pass multi-time SVGD assimilation |
+| Bidirectional C2F-SVGD-FM | **0.0267** | clean elite blind-select + re-noise to FlowMap time + resumed gated SVGD assimilation |
 
 ## Figures
 
@@ -77,6 +88,8 @@ Main C2F-SVGD-FM entry point:
 src/c2f_svgd_fm_case5.py
 scripts/run_flowmap_case5.sh
 ```
+
+The launcher is set to the bidirectional extension. For the single-pass C2F-SVGD-FM route, set `--svgd_bidir_rounds 0`.
 
 Baseline and data-generation code:
 
@@ -132,3 +145,5 @@ scripts/
 ## Short Takeaway
 
 For this hard FWI case, single-shot inverse solvers can be unstable because the seismic objective is multimodal. C2F-SVGD-FM keeps multiple raw-noise FlowMap basin candidates alive, transports them through FlowMap time, and uses differentiable FWI guidance plus gated SVGD updates to select a better geological basin.
+
+The bidirectional extension is a basin-escape step rather than a new initializer: it still starts from pure raw noise, but after one clean look-ahead it re-enters the FlowMap trajectory at an informative intermediate time and lets the same blind, gated C2F machinery refine again.

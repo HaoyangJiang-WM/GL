@@ -1,12 +1,13 @@
 {
   "case": "i=5 / global_idx=25005",
-  "best_mse": 0.0338617,
-  "best_method": "C2F-SVGD-FM",
+  "best_mse": 0.02666560187935829,
+  "best_method": "Bidirectional C2F-SVGD-FM",
+  "single_pass_mse": 0.03386170044541359,
   "best_setting": {
     "method": "proposal_ms_svgd",
     "initialization": "pure raw noise",
     "ensemble": 512,
-    "proposal_multiscale": "24,16,12,8,4,2,1",
+    "proposal_multiscale": "32,24,16,12,8,4,2,1",
     "proposal_union_k": 256,
     "particles": 16,
     "times": "0.85,0.70,0.55,0.40,0.25,0.12",
@@ -16,7 +17,8 @@
     "prior_tether": "0.05,0.08,0.15,0.22,0.38,0.58",
     "trust_region": "0.045,0.040,0.026,0.020,0.015,0.010",
     "gate_scales": "16,8,4,2,1",
-    "psd_mix": 0.35
+    "psd_mix": 0.35,
+    "bidirectional_extension": "1 round; blind-select clean elites; re-noise to t=0.70; resume gated C2F-SVGD-FM"
   },
   "baselines": {
     "no": 0.2781,
@@ -27,6 +29,7 @@
   "interpretation": [
     "UNet and PINN-UNet are supervised amortized inverse maps; they are strong baselines but can smooth multimodal or discontinuous structures.",
     "DPS/DDPM has a generative prior but repeated long-chain guidance through denoised clean estimates can be unstable for nonconvex FWI.",
-    "C2F-SVGD-FM uses pure raw-noise FlowMap proposals, multiscale blind ranking, multi-time z_t assimilation, and gated SVGD/Adam updates."
+    "C2F-SVGD-FM uses pure raw-noise FlowMap proposals, multiscale blind ranking, multi-time z_t assimilation, and gated SVGD/Adam updates.",
+    "The bidirectional extension keeps the same pure-noise start, then performs blind clean-elite selection and re-noises to an informative FlowMap time for basin escape."
   ]
 }

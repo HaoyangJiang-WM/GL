@@ -20,21 +20,31 @@ RESULTS = ROOT / "results"
 def main() -> None:
     FIGURES.mkdir(exist_ok=True)
     res = json.loads((RESULTS / "case5_curated_results.json").read_text())
-    labels = ["NO", "DPS\nwarmstart", "FlowMap\ncase-5 best"]
+    labels = [
+        "NO",
+        "DPS\nwarmstart",
+        "UNet",
+        "PINN-UNet",
+        "C2F-SVGD-FM\nsingle-pass",
+        "Bidirectional\nC2F-SVGD-FM",
+    ]
     vals = [
         res["no_mse_from_dps_log"],
         res["dps_best_visible"]["mse"],
+        res["unet_retrain_mse"],
+        res["pinn_unet_retrain_mse"],
+        res["single_pass_c2f_svgd_fm"]["mse"],
         res["main_best"]["mse"],
     ]
-    colors = ["#d65f5f", "#e6a23c", "#2d6cdf"]
+    colors = ["#d65f5f", "#e6a23c", "#8a8f98", "#6d7fb3", "#4b8fe2", "#1f5fbf"]
 
-    fig, ax = plt.subplots(figsize=(6.4, 4.2))
+    fig, ax = plt.subplots(figsize=(9.0, 4.2))
     bars = ax.bar(labels, vals, color=colors, width=0.62)
     ax.set_ylabel("relative MSE")
     ax.set_title("Hard case i=5 / g=25005")
     ax.grid(axis="y", alpha=0.25)
     for bar, val in zip(bars, vals):
-        ax.text(bar.get_x() + bar.get_width() / 2, val + 0.008, f"{val:.4f}", ha="center")
+        ax.text(bar.get_x() + bar.get_width() / 2, val + 0.006, f"{val:.4f}", ha="center")
     ax.set_ylim(0, max(vals) * 1.22)
     fig.tight_layout()
     fig.savefig(FIGURES / "case5_mse_bar.png", dpi=180)

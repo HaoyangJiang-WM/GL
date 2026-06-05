@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# Reproduction launcher for the case-5 C2F-SVGD-FM setting.
+# Reproduction launcher for the case-5 bidirectional C2F-SVGD-FM setting.
+# Set --svgd_bidir_rounds 0 to recover the single-pass C2F-SVGD-FM route.
 # Paths may need adjustment for a different cluster layout.
 
 python src/c2f_svgd_fm_case5.py \
@@ -24,10 +25,10 @@ python src/c2f_svgd_fm_case5.py \
   --direct_mute_frac 0.30 \
   --late_weight 4.0 \
   --ode_steps 5 \
-  --proposal_ms_scales 24,16,12,8,4,2,1 \
+  --proposal_ms_scales 32,24,16,12,8,4,2,1 \
   --proposal_ms_topk_start 256 \
   --proposal_ms_union_k 256 \
-  --proposal_ms_union_views 24,16,12,8,4,2,1 \
+  --proposal_ms_union_views 32,24,16,12,8,4,2,1 \
   --proposal_topk 8 \
   --psd_score rank \
   --psd_mix 0.35 \
@@ -44,8 +45,13 @@ python src/c2f_svgd_fm_case5.py \
   --svgd_gate \
   --svgd_gate_scales 16,8,4,2,1 \
   --svgd_feature 12 \
-  --svgd_bw 1.2 \
-  --svgd_repulse 0.4 \
-  --seed 202671279 \
+  --svgd_bw 1.5 \
+  --svgd_repulse 0.6 \
+  --svgd_bidir_rounds 1 \
+  --svgd_bidir_times 0.70 \
+  --svgd_bidir_k 16 \
+  --svgd_bidir_jitter 0.012 \
+  --svgd_bidir_temp 0.02 \
+  --seed 20267103 \
   --out results/case5_c2f_svgd_fm_run.json \
   --save_pred_dir outputs/case5_c2f_svgd_fm

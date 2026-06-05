@@ -1,14 +1,26 @@
 {
   "case": "i=5 / global_idx=25005",
   "main_best": {
-    "name": "C2F-SVGD-FM",
+    "name": "Bidirectional C2F-SVGD-FM",
     "full_name": "Coarse-to-Fine SVGD FlowMap Assimilation",
-    "mse": 0.0338617,
+    "mse": 0.02666560187935829,
     "initialization": "pure raw noise",
     "uses_no_initialization": true,
     "uses_unet_initialization": false,
     "uses_learned_corrector": false,
     "selection": "blind seismic score only"
+  },
+  "single_pass_c2f_svgd_fm": {
+    "name": "C2F-SVGD-FM",
+    "mse": 0.03386170044541359,
+    "description": "single-pass trajectory-compatible multi-time z_t SVGD assimilation"
+  },
+  "bidirectional_extension": {
+    "name": "Bidirectional C2F-SVGD-FM",
+    "mse": 0.02666560187935829,
+    "description": "blind-select clean elites, re-noise to an informative FlowMap time, then resume gated C2F-SVGD-FM assimilation",
+    "return_time": 0.70,
+    "rounds": 1
   },
   "unet_retrain_mse": 0.0557873398065567,
   "pinn_unet_retrain_mse": 0.03518037125468254,
@@ -30,7 +42,8 @@
   "main_method_components": [
     "raw-noise proposal bank plus multiscale blind rank",
     "trajectory-compatible multi-time z_t FlowMap assimilation",
-    "SVGD/Adam particle update with tether, trust region, gate, and final blind select"
+    "SVGD/Adam particle update with tether, trust region, gate, and final blind select",
+    "bidirectional re-noising extension for basin escape"
   ],
-  "notes": "Case-5 focused summary. C2F-SVGD-FM uses pure raw-noise FlowMap proposals and no NO/UNet initialization."
+  "notes": "Case-5 focused summary. Both single-pass and bidirectional C2F-SVGD-FM use pure raw-noise FlowMap proposals and no NO/UNet initialization."
 }
