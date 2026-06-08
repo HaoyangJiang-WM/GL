@@ -1,6 +1,6 @@
-# Flow Map in Full Waveform Inversion
+# OT-FM Velocity-ODE FlowMap in Full Waveform Inversion
 
-This repository is a compact case study for using an unconditional FlowMap prior in a full waveform inversion (FWI) inverse problem.
+This repository is a compact case study for using an unconditional **OT-FM / velocity-ODE FlowMap prior** in a full waveform inversion (FWI) inverse problem.
 
 The study focuses on one hard diagnostic example:
 
@@ -13,12 +13,14 @@ This case is useful because it separates geological correctness from low seismic
 
 ## Main Idea
 
-The main method is **C2F-SVGD-FM: Coarse-to-Fine SVGD FlowMap Assimilation**.
+The main method is **C2F-SVGD-FM: Coarse-to-Fine SVGD OT-FM FlowMap Assimilation**.
+
+In this repository, “FlowMap” refers to an **OT-FM velocity field integrated as an ODE trajectory**. The model predicts a time-dependent velocity \(v_\theta(x,t)\), and the map between FlowMap times is obtained by numerical ODE integration. It is not a direct learned endpoint map of the form \(F_\theta(x_s,s,t)\).
 
 ```text
 raw-noise proposal bank
 -> multiscale blind rank
--> trajectory-compatible FlowMap particles
+-> trajectory-compatible OT-FM / FlowMap particles
 -> differentiable FWI guidance
 -> SVGD / Adam update
 -> tether / trust / gate
@@ -28,12 +30,12 @@ raw-noise proposal bank
 The strongest variant in this repository adds a small **bidirectional re-noising extension** after the single-pass C2F trajectory:
 
 ```text
-blind-select clean FlowMap elites
--> re-noise them back to an informative FlowMap time
+blind-select clean OT-FM / FlowMap elites
+-> ODE re-noise them back to an informative FlowMap time
 -> resume gated C2F-SVGD-FM assimilation
 ```
 
-The learned FlowMap is used as an unconditional prior. The measurement enters only through FWI forward modeling, multiscale seismic scoring, and particle updates. The method does not use Neural Operator or UNet initialization, and it does not train a learned inverse corrector on the observed data.
+The learned OT-FM velocity-ODE prior is used as an unconditional prior. The measurement enters only through FWI forward modeling, multiscale seismic scoring, and particle updates. The method does not use Neural Operator or UNet initialization, and it does not train a learned inverse corrector on the observed data.
 
 ## Motivation
 
@@ -43,10 +45,10 @@ Diffusion DPS-type methods bring a stronger generative prior and can represent s
 
 C2F-SVGD-FM keeps the generative-prior advantage while making the inverse update more targeted:
 
-1. **Proposal diversity:** start from a raw-noise FlowMap proposal bank and keep multiple basin candidates.
+1. **Proposal diversity:** start from a raw-noise OT-FM / FlowMap proposal bank and keep multiple basin candidates.
 2. **Coarse-to-fine seismic ranking:** use multiscale observation consistency, not ground-truth velocity, to choose useful particles.
-3. **Particle transport in FlowMap time:** move the same particles along the FlowMap trajectory and update them with differentiable FWI gradients, SVGD diversity, and conservative accept/reject gates.
-4. **Bidirectional basin escape:** optionally select promising clean candidates, re-noise them back to a useful FlowMap time, and rerun the gated trajectory update to escape a poor local basin.
+3. **Particle transport in FlowMap time:** move the same particles along the OT-FM ODE trajectory and update them with differentiable FWI gradients, SVGD diversity, and conservative accept/reject gates.
+4. **Bidirectional basin escape:** optionally select promising clean candidates, ODE re-noise them back to a useful FlowMap time, and rerun the gated trajectory update to escape a poor local basin.
 
 ## Case-5 Result
 
@@ -57,6 +59,7 @@ single-pass normalized MSE = 0.033861700
 bidirectional extension normalized MSE = 0.026665602
 initialization = pure raw noise
 selection = blind seismic score only
+prior = unconditional OT-FM velocity-ODE FlowMap
 ```
 
 This is lower than the supervised UNet and PINN-UNet baselines on the same case.
@@ -67,14 +70,14 @@ This is lower than the supervised UNet and PINN-UNet baselines on the same case.
 | DPS / DDPM best visible | 0.1561 | best visible DPS diagnostic baseline |
 | UNet retrain | 0.0558 | supervised amortized inverse map |
 | PINN-UNet retrain | 0.0352 | supervised inverse map with physics loss |
-| C2F-SVGD-FM | 0.0339 | pure-noise FlowMap proposal bank + single-pass multi-time SVGD assimilation |
-| Bidirectional C2F-SVGD-FM | **0.0267** | clean elite blind-select + re-noise to FlowMap time + resumed gated SVGD assimilation |
+| C2F-SVGD-FM | 0.0339 | pure-noise OT-FM / FlowMap proposal bank + single-pass multi-time SVGD assimilation |
+| Bidirectional C2F-SVGD-FM | **0.0267** | clean elite blind-select + ODE re-noise to FlowMap time + resumed gated SVGD assimilation |
 
 ## Figures
 
-All velocity-model comparisons:
+OT-FM C2F-SVGD-FM velocity-model comparisons:
 
-![Case-5 all comparisons](figures/case5_all_comparisons.png)
+![OT-FM C2F-SVGD-FM case-5 velocity comparisons](figures/case5_all_comparisons.png)
 
 Observed seismic data for this case, i.e. the measured `y` used by the inverse problem:
 
@@ -144,6 +147,6 @@ scripts/
 
 ## Short Takeaway
 
-For this hard FWI case, single-shot inverse solvers can be unstable because the seismic objective is multimodal. C2F-SVGD-FM keeps multiple raw-noise FlowMap basin candidates alive, transports them through FlowMap time, and uses differentiable FWI guidance plus gated SVGD updates to select a better geological basin.
+For this hard FWI case, single-shot inverse solvers can be unstable because the seismic objective is multimodal. C2F-SVGD-FM keeps multiple raw-noise OT-FM / FlowMap basin candidates alive, transports them through FlowMap time by ODE integration, and uses differentiable FWI guidance plus gated SVGD updates to select a better geological basin.
 
-The bidirectional extension is a basin-escape step rather than a new initializer: it still starts from pure raw noise, but after one clean look-ahead it re-enters the FlowMap trajectory at an informative intermediate time and lets the same blind, gated C2F machinery refine again.
+The bidirectional extension is a basin-escape step rather than a new initializer: it still starts from pure raw noise, but after one clean look-ahead it ODE re-enters the FlowMap trajectory at an informative intermediate time and lets the same blind, gated C2F machinery refine again.
