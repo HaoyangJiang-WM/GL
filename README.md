@@ -77,7 +77,7 @@ This is lower than the supervised UNet and PINN-UNet baselines on the same case.
 
 OT-FM C2F-SVGD-FM velocity-model comparisons:
 
-![OT-FM C2F-SVGD-FM case-5 velocity comparisons](figures/case5_all_comparisons.png)
+![OT-FM C2F-SVGD-FM case-5 velocity comparisons](figures/case5_all_comparisons_otfm.svg)
 
 Observed seismic data for this case, i.e. the measured `y` used by the inverse problem:
 
@@ -109,6 +109,7 @@ src/gen_fwi_obs_multi.py
 ```text
 figures/
   case5_all_comparisons.png
+  case5_all_comparisons_otfm.svg
   case5_observed_y.png
 
 results/
